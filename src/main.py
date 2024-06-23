@@ -21,15 +21,15 @@ def write_to_db():
 
 app = FastAPI()
 app.mount("/frontend", StaticFiles(directory="frontend"), name="static")
-origins = ["*"]
+# origins = ["null"]
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
 
 @app.get("/guest/all")
@@ -102,6 +102,6 @@ async def test(message: str):
     await send_by_telegram("Отправка сообщения с кнопки на странице")
 
 
-@app.on_event("shutdown")
-async def shutdown():
-    await send_by_telegram("Мне плохо! Я прилёг :(")
+# @app.on_event("shutdown")
+# async def shutdown():
+#     await send_by_telegram("Мне плохо! Я прилёг :(")

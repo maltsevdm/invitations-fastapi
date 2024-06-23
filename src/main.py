@@ -28,7 +28,7 @@ app.add_middleware(
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 
@@ -100,3 +100,8 @@ async def get_guest_page(id: str):
 @app.get("/test/test")
 async def test(message: str):
     await send_by_telegram("Отправка сообщения с кнопки на странице")
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    await send_by_telegram("Мне плохо! Я прилёг :(")

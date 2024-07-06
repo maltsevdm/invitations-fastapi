@@ -1,26 +1,30 @@
 import json
 
 from fastapi import FastAPI, HTTPException, Response
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-from src.telegram import send_by_telegram
-from fastapi.middleware.cors import CORSMiddleware
+from jinja2 import Environment, FileSystemLoader
 
 from src.config import PASSWORD
+from src.schemas import AnketaSchema, Guest, GuestUpdate, Sex
+from src.telegram import send_by_telegram
 
 db_file = "db.json"
-
+guests: dict[str, Guest] = {}
 with open(db_file) as file:
-    guests: list[dict] = json.load(file)
+    for _id, guest in json.load(file).items():
+        guests[_id] = Guest.model_validate_json(guest)
 
 
 def write_to_db():
     with open(db_file, "w") as file:
-        json.dump(guests, file, indent=4, ensure_ascii=False)
+        data = {_id: guest.model_dump_json() for _id, guest in guests.items()}
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
 
 app = FastAPI()
-app.mount("/frontend", StaticFiles(directory="frontend"), name="static")
+
 origins = ["http://localhost"]
 
 app.add_middleware(
@@ -33,75 +37,101 @@ app.add_middleware(
 
 
 @app.get("/guest/all")
-async def get_all_guests() -> list[dict]:
+async def get_all_guests() -> dict[str, Guest]:
     return guests
 
 
 @app.post("/guest/create")
-async def add_guest(guest: dict, password: str) -> str:
+async def add_guest(sid: str, guest: Guest, password: str) -> str:
     if password != PASSWORD:
         raise HTTPException(status_code=401, detail="Неправильный пароль")
 
-    for item in guests:
-        if guest["id"] == item["id"]:
-            raise HTTPException(
-                status_code=400, detail="Гость с таким ID уже существует"
-            )
-    guests.append(guest)
+    if sid in guests:
+        raise HTTPException(status_code=400, detail="Гость с таким ID уже существует")
+    guests[sid] = guest
     write_to_db()
     return "Гость добавлен"
 
 
-@app.patch("/guest/{id}")
-async def update_guest(id: str, data: dict, password: str) -> dict:
+@app.patch("/guest/{sid}")
+async def update_guest(sid: str, data: GuestUpdate, password: str) -> dict:
     if password != PASSWORD:
         raise HTTPException(status_code=401, detail="Неправильный пароль")
 
-    for guest in guests:
-        if guest["id"] == id:
-            for k, v in data.items():
-                guest[k] = v
-            break
-    else:
-        raise HTTPException(status_code=400, detail="Гость с таким id не найден")
+    if sid not in guests:
+        raise HTTPException(status_code=400, detail="Гость с таким sid не найден")
+
+    data_dict = data.model_dump()
+
+    for k, v in data_dict.items():
+        if v is not None:
+            guests[sid][k] = v
 
     write_to_db()
-    return guest
+    return guests[sid]
 
 
-@app.delete("/guest/{id}")
-async def delete_guest(id: str, password: str) -> Response:
+@app.delete("/guest/{sid}")
+async def delete_guest(sid: str, password: str) -> Response:
     if password != PASSWORD:
         raise HTTPException(status_code=401, detail="Неправильный пароль")
 
-    for j, guest in enumerate(guests):
-        if guest["id"] == id:
-            i = j
-            break
-    else:
-        raise HTTPException(status_code=400, detail="Гость с таким id не найден")
+    if sid not in guests:
+        raise HTTPException(status_code=400, detail="Гость с таким sid не найден")
 
-    del guests[i]
+    del guests[sid]
     write_to_db()
     return Response(status_code=200)
 
 
-@app.get("/{id}")
-async def get_guest_page(id: str):
-    for guest in guests:
-        if guest["id"] == id:
-            break
+@app.get("/{sid}")
+async def get_guest_page(sid: str):
+    if sid not in guests:
+        raise HTTPException(status_code=404, detail="Гостя нет в списке :(")
+
+    environment = Environment(
+        loader=FileSystemLoader("frontend/"),
+        comment_start_string="{=",
+        comment_end_string="=}",
+    )
+    names = guests[sid].names
+    sex = guests[sid].sex
+    print(sex)
+    if not sex:
+        template = environment.get_template("index_many.html")
+    elif sex == Sex.female:
+        template = environment.get_template("index_female.html")
     else:
-        raise HTTPException(status_code=404)
-    with open("frontend/index.html") as file:
-        return HTMLResponse(content=file.read())
+        template = environment.get_template("index_male.html")
+
+    if len(names) > 1:
+        names = ", ".join(names[:-1]) + " и " + names[-1]
+    else:
+        names = names[0]
+
+    content = template.render(names=names.upper())
+
+    return HTMLResponse(content=content)
 
 
-@app.get("/test/test")
-async def test(message: str):
-    await send_by_telegram("Отправка сообщения с кнопки на странице")
+@app.post("/send_to_tg")
+async def send_to_telegram(password: str, anketa: AnketaSchema):
+    if password != PASSWORD:
+        raise HTTPException(status_code=401, detail="Неправильный пароль")
+
+    text = f"""📌 ID гостя: {anketa.id}
+📌 Присутствие: {"✅" if anketa.accept else "❌"}"""
+
+    if anketa.children is not None:
+        text += f"\n👨‍👨‍👦 Дети: {"✅" if anketa.children else "❌"}"
+
+    if anketa.drinks:
+        text += "\n🥂 Напитки: " + ", ".join(anketa.drinks)
+
+    if anketa.comment:
+        text += f"\n✏️ Коммент: {anketa.comment}"
+
+    await send_by_telegram(text)
 
 
-# @app.on_event("shutdown")
-# async def shutdown():
-#     await send_by_telegram("Мне плохо! Я прилёг :(")
+app.mount("/", StaticFiles(directory="frontend"), name="static")

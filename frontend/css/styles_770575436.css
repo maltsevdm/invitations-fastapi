@@ -1,0 +1,168 @@
+#rec770575436 .t396__artboard {
+    height: 68px;
+    background-color: #ffffff;
+}
+
+#rec770575436 .t396__filter {
+    height: 68px;
+}
+
+#rec770575436 .t396__carrier {
+    height: 68px;
+    background-position: center center;
+    background-attachment: scroll;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+@media screen and (max-width: 1199px) {
+    #rec770575436 .t396__artboard, #rec770575436 .t396__filter, #rec770575436 .t396__carrier {}
+
+    #rec770575436 .t396__filter {}
+
+    #rec770575436 .t396__carrier {
+        background-attachment: scroll;
+    }
+}
+
+@media screen and (max-width: 959px) {
+    #rec770575436 .t396__artboard, #rec770575436 .t396__filter, #rec770575436 .t396__carrier {}
+
+    #rec770575436 .t396__filter {}
+
+    #rec770575436 .t396__carrier {
+        background-attachment: scroll;
+    }
+}
+
+@media screen and (max-width: 639px) {
+    #rec770575436 .t396__artboard, #rec770575436 .t396__filter, #rec770575436 .t396__carrier {}
+
+    #rec770575436 .t396__filter {}
+
+    #rec770575436 .t396__carrier {
+        background-attachment: scroll;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    #rec770575436 .t396__artboard, #rec770575436 .t396__filter, #rec770575436 .t396__carrier {
+        height: 45px;
+    }
+
+    #rec770575436 .t396__filter {}
+
+    #rec770575436 .t396__carrier {
+        background-attachment: scroll;
+    }
+}
+
+#rec770575436 .tn-group[data-group-id="172017258926429220"] {
+    z-index: 5;
+    position: absolute;
+    top: 19px;
+    left: calc(50% - 600px + 504px);
+    width: 194px;
+    height: 30px;
+}
+
+#rec770575436 .tn-group[data-group-id="172017258926429220"] .tn-molecule {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    border-color: transparent;
+    border-style: solid;
+    box-sizing: border-box;
+    opacity: 1;
+}
+
+@media screen and (max-width: 1199px) {
+    #rec770575436 .tn-group[data-group-id="172017258926429220"] .tn-molecule {}
+}
+
+@media screen and (max-width: 959px) {
+    #rec770575436 .tn-group[data-group-id="172017258926429220"] .tn-molecule {}
+}
+
+@media screen and (max-width: 639px) {
+    #rec770575436 .tn-group[data-group-id="172017258926429220"] .tn-molecule {}
+}
+
+@media screen and (max-width: 479px) {
+    #rec770575436 .tn-group[data-group-id="172017258926429220"] {
+        top: 8px;
+        left: calc(50% - 160px + 84px);
+        width: 149px;
+        height: 30px;
+    }
+
+    #rec770575436 .tn-group[data-group-id="172017258926429220"] .tn-molecule {}
+}
+
+#rec770575436 .tn-elem[data-elem-id="1720172589264"] {
+    z-index: 2;
+    top: 0px;
+    left: 0px;
+    width: 194px;
+    height: 30px;
+}
+
+#rec770575436 .tn-elem[data-elem-id="1720172589264"] .tn-atom {
+    border-radius: 5px;
+    background-color: #ffffff;
+    background-position: center center;
+    border-color: transparent;
+    border-style: solid;
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.3);
+}
+
+@media screen and (max-width: 1199px) {}
+
+@media screen and (max-width: 959px) {}
+
+@media screen and (max-width: 639px) {}
+
+@media screen and (max-width: 479px) {
+    #rec770575436 .tn-elem[data-elem-id="1720172589264"] {
+        top: 8px;
+        left: calc(50% - 160px + 84px);
+        width: 149px;
+    }
+}
+
+#rec770575436 .tn-elem[data-elem-id="1720172589270"] {
+    color: #8c0000;
+    text-align: CENTER;
+    z-index: 3;
+    top: 3px;
+    left: 8px;
+    width: 178px;
+}
+
+#rec770575436 .tn-elem[data-elem-id="1720172589270"] .tn-atom {
+    color: #8c0000;
+    font-size: 20px;
+    font-family: 'Cormorant', Arial, sans-serif;
+    font-weight: 600;
+    background-position: center center;
+    border-color: transparent;
+    border-style: solid;
+}
+
+@media screen and (max-width: 1199px) {}
+
+@media screen and (max-width: 959px) {}
+
+@media screen and (max-width: 639px) {}
+
+@media screen and (max-width: 479px) {
+    #rec770575436 .tn-elem[data-elem-id="1720172589270"] {
+        top: 14px;
+        left: calc(50% - 160px + 84px);
+        width: 149px;
+    }
+
+    #rec770575436 .tn-elem[data-elem-id="1720172589270"] .tn-atom {
+        font-size: 15px;
+    }
+}

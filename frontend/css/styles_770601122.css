@@ -369,7 +369,7 @@
 
 @media screen and (max-width: 479px) {
     #rec770601122 .tn-group[data-group-id="172017522353036080"] {
-        top: 150px;
+        top: 10px;
         left: calc(50% - 160px + 105px);
         width: 109px;
         height: 30px;
@@ -539,8 +539,8 @@
 
 @media screen and (max-width: 479px) {
     #rec770601122 .tn-elem[data-elem-id="1720175226560"] {
-        top: 290px;
-        left: calc(50% - 160px + 44px);
-        width: 94px;
+        top: 0px;
+        left: calc(50% - 107px + 44px);
+        width: 110px;
     }
 }

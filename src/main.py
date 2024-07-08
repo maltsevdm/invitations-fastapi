@@ -54,7 +54,7 @@ async def add_guest(sid: str, guest: Guest, password: str) -> str:
 
 
 @app.patch("/guest/{sid}")
-async def update_guest(sid: str, data: GuestUpdate, password: str) -> dict:
+async def update_guest(sid: str, data: GuestUpdate, password: str) -> Guest:
     if password != PASSWORD:
         raise HTTPException(status_code=401, detail="Неправильный пароль")
 
@@ -65,7 +65,7 @@ async def update_guest(sid: str, data: GuestUpdate, password: str) -> dict:
 
     for k, v in data_dict.items():
         if v is not None:
-            guests[sid][k] = v
+            setattr(guests[sid], k, v)
 
     write_to_db()
     return guests[sid]
@@ -96,7 +96,7 @@ async def get_guest_page(sid: str):
     )
     names = guests[sid].names
     sex = guests[sid].sex
-    print(sex)
+
     if not sex:
         template = environment.get_template("index_many.html")
     elif sex == Sex.female:
